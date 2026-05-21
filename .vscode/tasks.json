@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Smoke: consensus",
+      "type": "shell",
+      "command": "python main_simulation.py --mode consensus --duration 1 --agents 8 --no-animate --save-plot outputs/consensus.png",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Smoke: leader-follower",
+      "type": "shell",
+      "command": "python main_simulation.py --mode leader-follower --duration 1 --agents 8 --no-animate --save-plot outputs/leader_follower.png",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Smoke: show",
+      "type": "shell",
+      "command": "python main_simulation.py --mode show --duration 1 --agents 8 --no-animate --save-plot outputs/show.png",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Watch: show GIF",
+      "type": "shell",
+      "command": "python main_simulation.py --mode show --duration 15 --agents 12 --no-animate --save-animation outputs/show.gif",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Watch: leader-follower GIF",
+      "type": "shell",
+      "command": "python main_simulation.py --mode leader-follower --duration 15 --agents 12 --no-animate --save-animation outputs/leader_follower.gif",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

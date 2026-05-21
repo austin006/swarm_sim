@@ -1,0 +1,25 @@
+{
+  "name": "Swarm Sim Python",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace/swarm_sim",
+  "remoteUser": "root",
+  "containerEnv": {
+    "MPLBACKEND": "Agg"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.terminal.activateEnvironment": false
+      }
+    }
+  },
+  "postCreateCommand": "python -m compileall core controllers utils main_simulation.py && python main_simulation.py --mode consensus --duration 0.2 --agents 6 --no-animate"
+}
