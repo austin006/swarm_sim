@@ -32,6 +32,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save-plot", type=Path, help="Save a final 3D position plot to this path")
     parser.add_argument("--save-animation", type=Path, help="Save the full simulation as a GIF")
     parser.add_argument("--animation-fps", type=int, default=25, help="Saved animation frames per second")
+    parser.add_argument("--animation-rotation", type=float, help="Optional total camera azimuth sweep across the saved animation in degrees")
+    parser.add_argument("--animation-rotation-rate", type=float, default=6.0, help="Camera azimuth speed in degrees per second when --animation-rotation is not set")
     return parser.parse_args()
 
 
@@ -110,6 +112,8 @@ def save_animation(
     target_frames: list[np.ndarray | None],
     title: str,
     fps: int,
+    rotation_degrees: float | None,
+    rotation_rate: float,
 ) -> None:
     """Write a GIF animation for headless container playback."""
 
@@ -141,7 +145,9 @@ def save_animation(
     ax.set_xlabel("X [m]")
     ax.set_ylabel("Y [m]")
     ax.set_zlabel("Z [m]")
-    ax.view_init(elev=24.0, azim=42.0)
+    base_elevation = 24.0
+    base_azimuth = 42.0
+    ax.view_init(elev=base_elevation, azim=base_azimuth)
     set_equalish_limits(ax, all_positions)
 
     def update(frame_index: int):
@@ -154,6 +160,12 @@ def save_animation(
         else:
             target_scatter._offsets3d = (targets[:, 0], targets[:, 1], targets[:, 2])
 
+        if rotation_degrees is None:
+            azimuth = base_azimuth + rotation_rate * frame_index / fps
+        else:
+            denominator = max(1, len(position_frames) - 1)
+            azimuth = base_azimuth + rotation_degrees * frame_index / denominator
+        ax.view_init(elev=base_elevation, azim=azimuth)
         ax.set_title(f"{title} | frame {frame_index + 1}/{len(position_frames)}")
         return scatter, target_scatter
 
@@ -289,6 +301,8 @@ def run_simulation(args: argparse.Namespace) -> np.ndarray:
             target_frames,
             title=f"{args.mode} | topology={args.topology}",
             fps=args.animation_fps,
+            rotation_degrees=args.animation_rotation,
+            rotation_rate=args.animation_rotation_rate,
         )
     if not args.no_animate:
         plt.ioff()

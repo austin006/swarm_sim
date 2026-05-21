@@ -38,6 +38,13 @@ Save the full simulation as a GIF:
 python main_simulation.py --mode show --duration 15 --no-animate --save-animation outputs/show.gif
 ```
 
+The saved GIF camera pans at a constant slow speed by default: `6` degrees per second, so a full 360-degree orbit takes about one minute. Override the speed or force a total sweep if desired:
+
+```powershell
+python main_simulation.py --mode leader-follower --duration 15 --no-animate --save-animation outputs/leader_follower.gif --animation-rotation-rate 3
+python main_simulation.py --mode leader-follower --duration 60 --no-animate --save-animation outputs/leader_follower_360.gif --animation-rotation 360
+```
+
 ## Docker / VS Code Dev Container
 
 This repository includes a `Dockerfile` and `.devcontainer/devcontainer.json` so Python does not need to be installed on the host.
